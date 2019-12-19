@@ -1,4 +1,4 @@
 export const filtersList = {
-  species: ["Human", "other"],
-  gender: ["male", "female"]
+  species: ["Human", "Alien"],
+  gender: ["Male", "Female"]
 };

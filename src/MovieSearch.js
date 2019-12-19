@@ -12,7 +12,7 @@ const MovieSearch = props => {
 
   return (
     <div>
-      <LeftMenu onFilterChange={onFilterChange} />
+      <LeftMenu onFilterChange={onFilterChange} selectedFilter={selectedFilter} />
       <MainContent searchResult={searchResult} />
     </div>
   );

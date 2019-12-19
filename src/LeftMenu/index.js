@@ -3,11 +3,16 @@ import { filtersList } from "./content";
 import FilterCard from "./FilterCard";
 
 const LeftMenu = props => {
-  const { onFilterChange } = props;
+  const { onFilterChange, selectedFilter } = props;
   return (
     <div style={{ width: "30vw" }}>
       {Object.entries(filtersList).map(([key, value]) => (
-        <FilterCard title={key.toUpperCase()} attributes={value} onFilterChange={onFilterChange} />
+        <FilterCard
+          title={key}
+          attributes={value}
+          onFilterChange={onFilterChange}
+          selectedFilter={selectedFilter}
+        />
       ))}
     </div>
   );

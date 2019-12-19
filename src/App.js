@@ -10,19 +10,43 @@ class App extends Component {
     sortBy: sortByAttributes.ASC
   };
 
-  componentDidMount = () => {
-    this.fetchMovies();
+  componentDidMount = async () => {
+    const searchResult = await this.fetchMovies();
+    this.setState({ searchResult });
   };
 
   fetchMovies = async () => {
     const url = "https://rickandmortyapi.com/api/character/";
     const response = await fetch(url);
     const responseJson = await response.json();
-    this.setState({ searchResult: responseJson.results });
+    return responseJson.results;
   };
 
-  onFilterChange = (e, title, attr) => {
-    const { checked } = e.target;
+  onFilterChange = async (title, attr) => {
+    const selectedFilter = JSON.parse(JSON.stringify(this.state.selectedFilter));
+    if (selectedFilter[title].includes(attr)) {
+      const index = selectedFilter[title].findIndex(el => el === attr);
+      selectedFilter[title].splice(index, 1);
+    } else {
+      selectedFilter[title].push(attr);
+    }
+    const searchResult = await this.fetchMovies();
+    const someFilterSelcted = Object.values(selectedFilter).some(value => value.length > 0);
+
+    if (!someFilterSelcted) {
+      return this.setState({ selectedFilter, searchResult });
+    }
+
+    const filteredResult = searchResult.filter(item => {
+      const hasSelectedSpecies = selectedFilter.species.includes(item.species);
+      const hasSelectedGender = selectedFilter.gender.includes(item.gender);
+      const hasSelectedOrigin = selectedFilter.origin.includes(item.origin.name);
+
+      const includeElement = hasSelectedSpecies || hasSelectedGender || hasSelectedOrigin;
+
+      return includeElement;
+    });
+    this.setState({ selectedFilter, searchResult: filteredResult });
   };
 
   render() {
