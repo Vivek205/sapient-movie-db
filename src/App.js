@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import MovieSearch from "./MovieSearch";
+import { sortByAttributes } from "./utils/sort";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    selectedFilter: { species: [], gender: [], origin: [] },
+    searchResult: [],
+    sortBy: sortByAttributes.ASC
+  };
+
+  componentDidMount = () => {
+    this.fetchMovies();
+  };
+
+  fetchMovies = async () => {
+    const url = "https://rickandmortyapi.com/api/character/";
+    const response = await fetch(url);
+    const responseJson = await response.json();
+    this.setState({ searchResult: responseJson.results });
+  };
+
+  onFilterChange = (e, title, attr) => {
+    const { checked } = e.target;
+  };
+
+  render() {
+    const { selectedFilter, searchResult, sortBy } = this.state;
+    return (
+      <div className="App">
+        <MovieSearch
+          selectedFilter={selectedFilter}
+          searchResult={searchResult}
+          sortBy={sortBy}
+          onFilterChange={this.onFilterChange}
+        />
+      </div>
+    );
+  }
 }
 
 export default App;
